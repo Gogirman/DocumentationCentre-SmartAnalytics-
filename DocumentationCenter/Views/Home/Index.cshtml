@@ -1,0 +1,169 @@
+﻿@model DocumentViewModel
+
+@{
+    ViewBag.Title = "Documentation Centre";
+    Layout = "_Layout";
+}
+
+@*Форма для добавления файла*@
+<form asp-action="AddFile" asp-controller="Home" method="post" enctype="multipart/form-data">
+    <p>
+        <label>Аннотация</label>
+        <input name="Annotation" class="form-control" />
+    </p>
+    <p>
+        <label>Документ</label>
+        <input name="FileDocument" type="file" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" size="5" />
+    </p>
+    <p>
+        <input type="submit" value="Добавить файл" class="form-control" size="5" />
+    </p>
+    <p>
+        <input id="filePath" name="MasterGuid" class="form-control" />
+    </p>
+</form>
+@*Форма для добавления каталога*@
+<form asp-action="AddFolder" asp-controller="Home" method="post" enctype="multipart/form-data">
+    <p>
+        <label>Имя</label>
+        <input name="Name" class="form-control" size="5" />
+    </p>
+    <p>
+        <label>Аннотация</label>
+        <input name="Annotation" class="form-control" size="5" />
+    </p>
+
+    <p>
+        <input id="addFolder" type="submit" value="Добавить папку" class="form-control" size="5" />
+    </p>
+</form>
+@*Вывод аннотации*@
+<label class="annotation" >
+
+</label>
+@*Вывод каталогов*@
+<ul class="list-group btn-group-toggle" data-toggle="buttons">
+    @foreach (var file1 in Model.Files.Where(f => f.ParentId == null))
+    {
+        @Html.CreateList(file1)
+    }
+</ul>
+
+
+
+@section Scripts{
+    <script>
+        @* Скрипт удаления файла*@
+            function Delete() {
+                $('button.deleteFile').on('click', function () {
+                    if ($(this).attr('parametre')) {
+                        $.ajax({
+                            url: '@Url.Action("Delete", "Home")',
+                            data: { parametre: $(this).attr('parametre') },
+                            method: "POST",
+                            success: function (id) {
+
+                                $('#' + id).remove();
+                            }
+                        });
+                    }
+                });
+        };
+        $(Delete());
+        @* Скрипт сброса выделенного каталога*@
+        $(function () {
+            var clicks = 0;
+            $(document).on('click', function (e) {
+                if (!$('.form-control').is(e.target))
+                    $('#filePath').val('');
+            });
+        });
+        @* Скрипт выбора объекта*@
+        $(function () {
+            var clicks = 0;
+            $('a.list-group-item').on('click', function () {
+                if ($(this).attr('primarykey')) {
+                    $.ajax({
+                        url: '@Url.Action("Select", "Home")',
+                        data: { primarykey: $(this).attr('primarykey') },
+                        method: "POST",
+                        success: function (file) {
+                            $('#filePath').val(file.id);
+                            $('.annotation').text(file.annotation);
+                        }
+                    });
+                }
+            });
+        });
+        @* Скрипт расскрытия каталога*@
+        $(function () {
+            $('a.list-group-item').on('dblclick', function () {
+                if ($(this).hasClass('opened')) {
+                    $(this).removeClass('opened');
+                    var parent = $(this).parent();
+                    parent.children('ul').remove();
+                    console.log(parent);
+                }
+                else {
+                    $(this).addClass('opened')
+                    if ($(this).attr('primarykey')) {
+                        $.ajax({
+                            url: '@Url.Action("GetFolder", "Home")',
+                            data: { primarykey: $(this).attr('primarykey') },
+                            method: "POST",
+                            success: function (files) {
+                                var s = '<ul>';
+                                if (!$(this).empty())
+                                {
+                                    for (var i = 0; i < files.length; i++) {
+                                        $("#" + files[i].parentId).remove();
+                                    }
+                                }
+                                else {
+                                    for (var i = 0; i < files.length; i++) {
+                                        s += '<li id="' + files[i].id + '">';
+                                        s += '<a class="list-group-item secondLevel asd" primarykey="' + files[i].id + '">'
+                                        s += '<button class="deleteFile" parametre="' + files[i].id + '">'
+                                        s += '<img class="elementPhoto" src="http://s1.iconbird.com/ico/2013/9/452/w448h5121380477116trash.png">'
+                                        s += '</button>'
+                                        s += '<img class="elementPhoto" src="' + files[i].baseIcon + '">'
+                                        s += '<p class="elementText">' + files[i].name + '</p>'
+                                        s += '</a>';
+                                        s += '</li>';
+                                    }
+                                    s += '</ul>';
+                                    $("#" + files[0].parentId).append(s);
+                                    Delete();
+                                    Download();
+                            }
+                            }
+                        });
+                    }
+                }
+            });
+        });
+        @* Скрипт выгрузки документа клиенту*@
+        function Download() {
+            $('.asd').on('dblclick', function () {
+                if ($(this).attr('primarykey')) {
+                    $.ajax({
+                        url: '@Url.Action("Download", "Home")',
+                        data: { primarykey: $(this).attr('primarykey') },
+                        method: "POST",
+                        success:
+                            function (file) {
+                                var blob = new Blob([file.fileDocument], { type: "application/" + file.format});
+                                var link = document.createElement('a');
+                                link.href = window.URL.createObjectURL(blob);
+                                var fileName = file.name;
+                                link.download = fileName;
+                                link.click();
+                            }
+                    });
+                }
+            });
+        };
+        $(Download());
+    </script>
+
+}

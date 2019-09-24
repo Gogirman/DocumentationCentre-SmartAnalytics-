@@ -1,0 +1,11 @@
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\bin\Debug\netcoreapp2.1\DataProvider.deps.json
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\bin\Debug\netcoreapp2.1\DataProvider.dll
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\obj\Debug\netcoreapp2.1\DataProvider.csproj.CoreCompileInputs.cache
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\obj\Debug\netcoreapp2.1\DataProvider.AssemblyInfoInputs.cache
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\obj\Debug\netcoreapp2.1\DataProvider.AssemblyInfo.cs
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\bin\Debug\netcoreapp2.1\DataProvider.pdb
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\obj\Debug\netcoreapp2.1\DataProvider.dll
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\obj\Debug\netcoreapp2.1\DataProvider.pdb
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\bin\Debug\netcoreapp2.1\DataProvider.runtimeconfig.json
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\bin\Debug\netcoreapp2.1\DataProvider.runtimeconfig.dev.json
+C:\Users\Шипик\source\repos\DocumentationCenter\DataProvider\obj\Debug\netcoreapp2.1\DataProvider.csprojAssemblyReference.cache
